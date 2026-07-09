@@ -4,17 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portfólio de Miele Silva - Desenvolvedor Back-end Python com foco em IA, APIs, chatbots e engenharia de software.">
+    <meta property="og:title" content="Miele Silva - Desenvolvedor Back-end Python">
+    <meta property="og:description" content="Portfólio de Miele Silva - Desenvolvedor Back-end Python com foco em IA, APIs, chatbots e engenharia de software.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mielesantos.github.io">
+    <meta property="og:image" content="https://github-readme-stats.vercel.app/api?username=MieleSantos&amp;show_icons=true&amp;theme=dracula&amp;hide_border=true">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦖</text></svg>">
     <title>Miele Silva - Desenvolvedor Back-end Python</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <a href="#home" class="skip-link">Pular para o conteúdo</a>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <span class="logo">🦖</span>
+                <span class="logo"><i class="fas fa-code"></i></span>
                 <span class="name">Miele Silva</span>
             </div>
             <ul class="nav-menu" id="navMenu">
@@ -25,7 +36,7 @@
                 <li><a href="#articles" class="nav-link">Artigos</a></li>
                 <li><a href="#contact" class="nav-link">Contato</a></li>
             </ul>
-            <div class="hamburger" id="hamburger">
+            <div class="hamburger" id="hamburger" role="button" aria-label="Abrir menu" aria-expanded="false" tabindex="0">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -51,19 +62,37 @@
                         <a href="#contact" class="btn btn-secondary">Entre em Contato</a>
                     </div>
                     <div class="social-links">
-                        <a href="https://github.com/MieleSantos" target="_blank" aria-label="GitHub">
+                        <a href="https://github.com/MieleSantos" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" aria-label="LinkedIn">
+                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                             <i class="fab fa-linkedin"></i>
                         </a>
                     </div>
                 </div>
                 <div class="hero-image">
-                    <div class="code-animation">
-                        <div class="code-line"></div>
-                        <div class="code-line"></div>
-                        <div class="code-line"></div>
+                    <div class="mock-ide">
+                        <div class="ide-header">
+                            <div class="ide-dot red"></div>
+                            <div class="ide-dot yellow"></div>
+                            <div class="ide-dot green"></div>
+                            <div class="ide-title">agent.py</div>
+                        </div>
+                        <div class="ide-body">
+                            <pre><code><span class="keyword">from</span> <span class="module">langchain</span> <span class="keyword">import</span> OpenAI
+<span class="keyword">from</span> <span class="module">langgraph.graph</span> <span class="keyword">import</span> StateGraph
+
+<span class="comment"># Agente de IA com LangGraph</span>
+<span class="keyword">def</span> <span class="function">assistant</span>(state):
+    llm = OpenAI(model=<span class="string">"gpt-4o"</span>)
+    response = llm.invoke(state.message)
+    <span class="keyword">return</span> {<span class="string">"reply"</span>: response}
+
+workflow = StateGraph()
+workflow.add_node(<span class="string">"agent"</span>, assistant)
+workflow.set_entry_point(<span class="string">"agent"</span>)
+agent = workflow.compile()</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -199,6 +228,8 @@
                 <button class="filter-btn" data-filter="ia" type="button">IA</button>
                 <button class="filter-btn" data-filter="api" type="button">API</button>
                 <button class="filter-btn" data-filter="data" type="button">Dados</button>
+                <button class="filter-btn" data-filter="cloud" type="button">Nuvem</button>
+                <button class="filter-btn" data-filter="study" type="button">Estudos</button>
             </div>
             <div class="projects-grid">
                 <!-- Chatbots & IA -->
@@ -207,6 +238,10 @@
                     <h3>Chatbots & IA</h3>
                     <p>Projetos de chatbots inteligentes e agentes com IA</p>
                     <ul class="project-list">
+                        <li><a href="https://github.com/MieleSantos/KnowledgeHub" target="_blank">KnowledgeHub - Busca semântica e chatbot de biblioteca</a></li>
+                        <li><a href="https://github.com/MieleSantos/semantic_search" target="_blank">Semantic Search - Busca semântica com IA Generativa</a></li>
+                        <li><a href="https://github.com/MieleSantos/pybot" target="_blank">Pybot - Chatbot de dúvidas sobre Python</a></li>
+                        <li><a href="https://github.com/MieleSantos/localfinderia" target="_blank">Localfinderia - Localização de estabelecimentos com IA</a></li>
                         <li><a href="https://github.com/MieleSantos/zapbot" target="_blank">Zapbot - Bot com IA para WhatsApp</a></li>
                         <li><a href="https://github.com/MieleSantos/chatbot-langgraph" target="_blank">Chatbot LangGraph - Fluxos conversacionais com LangGraph</a></li>
                         <li><a href="https://github.com/MieleSantos/rag_chatbot" target="_blank">RAG Chatbot - Chatbot com abordagem Retrieval-Augmented Generation</a></li>
@@ -222,6 +257,7 @@
                     <h3>APIs & Backend</h3>
                     <p>APIs REST robustas e sistemas backend</p>
                     <ul class="project-list">
+                        <li><a href="https://github.com/MieleSantos/book_catalog_api" target="_blank">Book Catalog API - Criação e consulta de livros</a></li>
                         <li><a href="https://github.com/MieleSantos/api_email" target="_blank">API Email - API de estudos com Celery</a></li>
                         <li><a href="https://github.com/MieleSantos/read_api_network" target="_blank">Read API Network - Desafio de processo seletivo</a></li>
                         <li><a href="https://github.com/MieleSantos/quickstart_api_openai" target="_blank">Quickstart API OpenAI - Integração com API da OpenAI</a></li>
@@ -249,6 +285,7 @@
                     <h3>Cloud & Big Data</h3>
                     <p>Projetos em nuvem e big data</p>
                     <ul class="project-list">
+                        <li><a href="https://github.com/MieleSantos/energy_solar" target="_blank">Energy Solar - Estudos com Flask, K8s e GitHub Actions</a></li>
                         <li><a href="https://github.com/MieleSantos/website_static_aws_s3" target="_blank">Website Static AWS S3 - Deploy estático na AWS</a></li>
                         <li><a href="https://github.com/MieleSantos/fundamentos_etl_python" target="_blank">Fundamentos ETL Python - Pipeline de dados com Python</a></li>
                         <li><a href="https://github.com/MieleSantos/pipeline_process_processo" target="_blank">Pipeline Process Processo - Automação de processamento</a></li>
@@ -330,20 +367,55 @@
             <h2 class="section-title">Entre em Contato</h2>
             <div class="contact-content">
                 <div class="contact-info">
-                    <p>Estou sempre aberto a novas oportunidades e projetos interessantes!</p>
-                    <div class="contact-items">
-                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" class="contact-item">
-                            <i class="fab fa-linkedin"></i>
-                            <span>LinkedIn</span>
+                    <h3>Fale Comigo</h3>
+                    <p>Tem algum projeto interessante, oportunidade de trabalho ou quer apenas bater um papo sobre IA e desenvolvimento? Sinta-se à vontade para entrar em contato!</p>
+                    
+                    <div class="contact-cards-grid">
+                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" rel="noopener noreferrer" class="contact-card-item">
+                            <div class="contact-card-icon linkedin"><i class="fab fa-linkedin-in"></i></div>
+                            <div class="contact-card-details">
+                                <span class="contact-label">LinkedIn</span>
+                                <span class="contact-value">in/mielesilva</span>
+                            </div>
                         </a>
-                        <a href="https://github.com/MieleSantos" target="_blank" class="contact-item">
-                            <i class="fab fa-github"></i>
-                            <span>GitHub</span>
+                        
+                        <a href="mailto:mielesnts@gmail.com" class="contact-card-item">
+                            <div class="contact-card-icon email"><i class="far fa-envelope"></i></div>
+                            <div class="contact-card-details">
+                                <span class="contact-label">E-mail</span>
+                                <span class="contact-value">mielesnts@gmail.com</span>
+                            </div>
                         </a>
                     </div>
                 </div>
                 <div class="github-stats">
-                    <img src="https://github-readme-stats.vercel.app/api?username=MieleSantos&show_icons=true&theme=dracula&hide_border=true&bg_color=0D1117&title_color=58A6FF&icon_color=58A6FF" alt="GitHub Stats" />
+                    <div class="github-profile-card">
+                        <div class="profile-header">
+                            <img src="https://github.com/MieleSantos.png" alt="Miele Silva" class="profile-avatar" id="ghAvatar" />
+                            <div class="profile-meta">
+                                <h3 id="ghName">Miele Silva</h3>
+                                <p>@MieleSantos</p>
+                            </div>
+                        </div>
+                        <p class="profile-bio" id="ghBio">Carregando informações do GitHub...</p>
+                        <div class="profile-stats-grid">
+                            <div class="profile-stat">
+                                <span class="stat-val" id="ghReposVal">...</span>
+                                <span class="stat-lbl">Repositórios</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-val" id="ghStarsVal">...</span>
+                                <span class="stat-lbl">Stars</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-val" id="ghFollowersVal">...</span>
+                                <span class="stat-lbl">Seguidores</span>
+                            </div>
+                        </div>
+                        <a href="https://github.com/MieleSantos" target="_blank" rel="noopener noreferrer" class="profile-link-btn">
+                            <i class="fab fa-github"></i> Ver perfil completo
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -357,7 +429,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
 
