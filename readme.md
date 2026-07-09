@@ -59,12 +59,13 @@ Portfólio pessoal publicado no GitHub Pages, alinhado ao perfil [@MieleSantos](
 ## 🎯 Personalização
 
 ### Cores
-Edite as variáveis CSS em `styles.css`:
+### Cores
+Edite as variáveis CSS em `css/styles.css`:
 ```css
 :root {
-    --primary-color: #58A6FF;
-    --secondary-color: #1C3C3C;
-    --bg-dark: #0D1117;
+    --primary-color: #6366F1; /* Indigo */
+    --accent-color: #06B6D4; /* Cyan */
+    --bg-dark: #060814; /* Obsidian Deep */
     /* ... */
 }
 ```
@@ -77,7 +78,7 @@ Edite as variáveis CSS em `styles.css`:
 ### Dados do GitHub
 - Os **Projetos Recentes** são carregados via endpoint público:
   - `https://api.github.com/users/MieleSantos/repos?sort=updated&direction=desc&per_page=100`
-- O bloco de **GitHub Stats** usa serviço de imagem externo.
+- O bloco de **GitHub Stats** é um card de perfil nativo e dinâmico que puxa os dados em tempo real.
   - Se o serviço estiver indisponível, mantenha o card de projetos recentes como fonte principal dos dados dinâmicos.
 
 ## 📱 Responsividade
