@@ -71,10 +71,28 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <div class="code-animation">
-                        <div class="code-line"></div>
-                        <div class="code-line"></div>
-                        <div class="code-line"></div>
+                    <div class="mock-ide">
+                        <div class="ide-header">
+                            <div class="ide-dot red"></div>
+                            <div class="ide-dot yellow"></div>
+                            <div class="ide-dot green"></div>
+                            <div class="ide-title">agent.py</div>
+                        </div>
+                        <div class="ide-body">
+                            <pre><code><span class="keyword">from</span> <span class="module">langchain</span> <span class="keyword">import</span> OpenAI
+<span class="keyword">from</span> <span class="module">langgraph.graph</span> <span class="keyword">import</span> StateGraph
+
+<span class="comment"># Agente de IA com LangGraph</span>
+<span class="keyword">def</span> <span class="function">assistant</span>(state):
+    llm = OpenAI(model=<span class="string">"gpt-4o"</span>)
+    response = llm.invoke(state.message)
+    <span class="keyword">return</span> {<span class="string">"reply"</span>: response}
+
+workflow = StateGraph()
+workflow.add_node(<span class="string">"agent"</span>, assistant)
+workflow.set_entry_point(<span class="string">"agent"</span>)
+agent = workflow.compile()</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -349,20 +367,55 @@
             <h2 class="section-title">Entre em Contato</h2>
             <div class="contact-content">
                 <div class="contact-info">
-                    <p>Estou sempre aberto a novas oportunidades e projetos interessantes!</p>
-                    <div class="contact-items">
-                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" rel="noopener noreferrer" class="contact-item">
-                            <i class="fab fa-linkedin"></i>
-                            <span>LinkedIn</span>
+                    <h3>Fale Comigo</h3>
+                    <p>Tem algum projeto interessante, oportunidade de trabalho ou quer apenas bater um papo sobre IA e desenvolvimento? Sinta-se à vontade para entrar em contato!</p>
+                    
+                    <div class="contact-cards-grid">
+                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" rel="noopener noreferrer" class="contact-card-item">
+                            <div class="contact-card-icon linkedin"><i class="fab fa-linkedin-in"></i></div>
+                            <div class="contact-card-details">
+                                <span class="contact-label">LinkedIn</span>
+                                <span class="contact-value">in/mielesilva</span>
+                            </div>
                         </a>
-                        <a href="https://github.com/MieleSantos" target="_blank" rel="noopener noreferrer" class="contact-item">
-                            <i class="fab fa-github"></i>
-                            <span>GitHub</span>
+                        
+                        <a href="mailto:mielesnts@gmail.com" class="contact-card-item">
+                            <div class="contact-card-icon email"><i class="far fa-envelope"></i></div>
+                            <div class="contact-card-details">
+                                <span class="contact-label">E-mail</span>
+                                <span class="contact-value">mielesnts@gmail.com</span>
+                            </div>
                         </a>
                     </div>
                 </div>
                 <div class="github-stats">
-                    <img src="https://github-readme-stats.vercel.app/api?username=MieleSantos&show_icons=true&theme=dracula&hide_border=true&bg_color=0D1117&title_color=58A6FF&icon_color=58A6FF" alt="GitHub Stats" loading="lazy" />
+                    <div class="github-profile-card">
+                        <div class="profile-header">
+                            <img src="https://github.com/MieleSantos.png" alt="Miele Silva" class="profile-avatar" id="ghAvatar" />
+                            <div class="profile-meta">
+                                <h3 id="ghName">Miele Silva</h3>
+                                <p>@MieleSantos</p>
+                            </div>
+                        </div>
+                        <p class="profile-bio" id="ghBio">Carregando informações do GitHub...</p>
+                        <div class="profile-stats-grid">
+                            <div class="profile-stat">
+                                <span class="stat-val" id="ghReposVal">...</span>
+                                <span class="stat-lbl">Repositórios</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-val" id="ghStarsVal">...</span>
+                                <span class="stat-lbl">Stars</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-val" id="ghFollowersVal">...</span>
+                                <span class="stat-lbl">Seguidores</span>
+                            </div>
+                        </div>
+                        <a href="https://github.com/MieleSantos" target="_blank" rel="noopener noreferrer" class="profile-link-btn">
+                            <i class="fab fa-github"></i> Ver perfil completo
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

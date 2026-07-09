@@ -43,11 +43,13 @@ function handleScroll() {
     const scrollY = window.scrollY;
 
     if (scrollY > 50) {
-        navbar.style.backgroundColor = 'rgba(13, 17, 23, 0.98)';
-        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
+        navbar.style.backgroundColor = 'rgba(6, 8, 20, 0.98)';
+        navbar.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+        navbar.style.borderBottomColor = 'rgba(99, 102, 241, 0.2)';
     } else {
-        navbar.style.backgroundColor = 'rgba(13, 17, 23, 0.95)';
+        navbar.style.backgroundColor = 'rgba(6, 8, 20, 0.92)';
         navbar.style.boxShadow = 'none';
+        navbar.style.borderBottomColor = 'var(--border-color)';
     }
 
     sections.forEach(section => {
@@ -176,7 +178,7 @@ function renderRecentProjects(repos, container) {
 
 async function loadUserStats() {
     const statNumbers = document.querySelectorAll('.stat-number');
-    if (!statNumbers.length) return;
+    const hasStats = statNumbers.length > 0;
 
     const cacheKey = 'gh_user';
     const cached = getCachedData(cacheKey, 3600000);
@@ -206,20 +208,37 @@ async function loadUserStats() {
         } catch {}
     }
 
-    let totalStars = '...';
+    let totalStars = 0;
     if (repos) {
         totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
     }
 
-    const stats = [
-        userData.public_repos + '+',
-        totalStars,
-        userData.followers ?? '...'
-    ];
+    // Atualiza contadores da seção Sobre Mim se existirem
+    if (hasStats) {
+        const stats = [
+            (userData.public_repos ?? 0) + '+',
+            totalStars,
+            userData.followers ?? '...'
+        ];
+        statNumbers.forEach((el, i) => {
+            if (stats[i] !== undefined) el.textContent = String(stats[i]);
+        });
+    }
 
-    statNumbers.forEach((el, i) => {
-        if (stats[i] !== undefined) el.textContent = String(stats[i]);
-    });
+    // Atualiza o novo Card de Perfil do GitHub dinamicamente
+    const ghAvatar = document.getElementById('ghAvatar');
+    const ghName = document.getElementById('ghName');
+    const ghBio = document.getElementById('ghBio');
+    const ghReposVal = document.getElementById('ghReposVal');
+    const ghStarsVal = document.getElementById('ghStarsVal');
+    const ghFollowersVal = document.getElementById('ghFollowersVal');
+
+    if (ghAvatar && userData.avatar_url) ghAvatar.src = userData.avatar_url;
+    if (ghName && userData.name) ghName.textContent = userData.name;
+    if (ghBio) ghBio.textContent = userData.bio || 'Desenvolvedor Back-end Python | Apaixonado por IA e automações.';
+    if (ghReposVal) ghReposVal.textContent = String(userData.public_repos ?? 0);
+    if (ghStarsVal) ghStarsVal.textContent = String(totalStars);
+    if (ghFollowersVal) ghFollowersVal.textContent = String(userData.followers ?? 0);
 }
 
 const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
