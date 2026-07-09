@@ -4,17 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portfólio de Miele Silva - Desenvolvedor Back-end Python com foco em IA, APIs, chatbots e engenharia de software.">
+    <meta property="og:title" content="Miele Silva - Desenvolvedor Back-end Python">
+    <meta property="og:description" content="Portfólio de Miele Silva - Desenvolvedor Back-end Python com foco em IA, APIs, chatbots e engenharia de software.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mielesantos.github.io">
+    <meta property="og:image" content="https://github-readme-stats.vercel.app/api?username=MieleSantos&amp;show_icons=true&amp;theme=dracula&amp;hide_border=true">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦖</text></svg>">
     <title>Miele Silva - Desenvolvedor Back-end Python</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <a href="#home" class="skip-link">Pular para o conteúdo</a>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <span class="logo">🦖</span>
+                <span class="logo"><i class="fas fa-code"></i></span>
                 <span class="name">Miele Silva</span>
             </div>
             <ul class="nav-menu" id="navMenu">
@@ -25,7 +36,7 @@
                 <li><a href="#articles" class="nav-link">Artigos</a></li>
                 <li><a href="#contact" class="nav-link">Contato</a></li>
             </ul>
-            <div class="hamburger" id="hamburger">
+            <div class="hamburger" id="hamburger" role="button" aria-label="Abrir menu" aria-expanded="false" tabindex="0">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -51,10 +62,10 @@
                         <a href="#contact" class="btn btn-secondary">Entre em Contato</a>
                     </div>
                     <div class="social-links">
-                        <a href="https://github.com/MieleSantos" target="_blank" aria-label="GitHub">
+                        <a href="https://github.com/MieleSantos" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" aria-label="LinkedIn">
+                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                             <i class="fab fa-linkedin"></i>
                         </a>
                     </div>
@@ -199,6 +210,8 @@
                 <button class="filter-btn" data-filter="ia" type="button">IA</button>
                 <button class="filter-btn" data-filter="api" type="button">API</button>
                 <button class="filter-btn" data-filter="data" type="button">Dados</button>
+                <button class="filter-btn" data-filter="cloud" type="button">Nuvem</button>
+                <button class="filter-btn" data-filter="study" type="button">Estudos</button>
             </div>
             <div class="projects-grid">
                 <!-- Chatbots & IA -->
@@ -207,6 +220,10 @@
                     <h3>Chatbots & IA</h3>
                     <p>Projetos de chatbots inteligentes e agentes com IA</p>
                     <ul class="project-list">
+                        <li><a href="https://github.com/MieleSantos/KnowledgeHub" target="_blank">KnowledgeHub - Busca semântica e chatbot de biblioteca</a></li>
+                        <li><a href="https://github.com/MieleSantos/semantic_search" target="_blank">Semantic Search - Busca semântica com IA Generativa</a></li>
+                        <li><a href="https://github.com/MieleSantos/pybot" target="_blank">Pybot - Chatbot de dúvidas sobre Python</a></li>
+                        <li><a href="https://github.com/MieleSantos/localfinderia" target="_blank">Localfinderia - Localização de estabelecimentos com IA</a></li>
                         <li><a href="https://github.com/MieleSantos/zapbot" target="_blank">Zapbot - Bot com IA para WhatsApp</a></li>
                         <li><a href="https://github.com/MieleSantos/chatbot-langgraph" target="_blank">Chatbot LangGraph - Fluxos conversacionais com LangGraph</a></li>
                         <li><a href="https://github.com/MieleSantos/rag_chatbot" target="_blank">RAG Chatbot - Chatbot com abordagem Retrieval-Augmented Generation</a></li>
@@ -222,6 +239,7 @@
                     <h3>APIs & Backend</h3>
                     <p>APIs REST robustas e sistemas backend</p>
                     <ul class="project-list">
+                        <li><a href="https://github.com/MieleSantos/book_catalog_api" target="_blank">Book Catalog API - Criação e consulta de livros</a></li>
                         <li><a href="https://github.com/MieleSantos/api_email" target="_blank">API Email - API de estudos com Celery</a></li>
                         <li><a href="https://github.com/MieleSantos/read_api_network" target="_blank">Read API Network - Desafio de processo seletivo</a></li>
                         <li><a href="https://github.com/MieleSantos/quickstart_api_openai" target="_blank">Quickstart API OpenAI - Integração com API da OpenAI</a></li>
@@ -249,6 +267,7 @@
                     <h3>Cloud & Big Data</h3>
                     <p>Projetos em nuvem e big data</p>
                     <ul class="project-list">
+                        <li><a href="https://github.com/MieleSantos/energy_solar" target="_blank">Energy Solar - Estudos com Flask, K8s e GitHub Actions</a></li>
                         <li><a href="https://github.com/MieleSantos/website_static_aws_s3" target="_blank">Website Static AWS S3 - Deploy estático na AWS</a></li>
                         <li><a href="https://github.com/MieleSantos/fundamentos_etl_python" target="_blank">Fundamentos ETL Python - Pipeline de dados com Python</a></li>
                         <li><a href="https://github.com/MieleSantos/pipeline_process_processo" target="_blank">Pipeline Process Processo - Automação de processamento</a></li>
@@ -332,18 +351,18 @@
                 <div class="contact-info">
                     <p>Estou sempre aberto a novas oportunidades e projetos interessantes!</p>
                     <div class="contact-items">
-                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" class="contact-item">
+                        <a href="https://www.linkedin.com/in/mielesilva/" target="_blank" rel="noopener noreferrer" class="contact-item">
                             <i class="fab fa-linkedin"></i>
                             <span>LinkedIn</span>
                         </a>
-                        <a href="https://github.com/MieleSantos" target="_blank" class="contact-item">
+                        <a href="https://github.com/MieleSantos" target="_blank" rel="noopener noreferrer" class="contact-item">
                             <i class="fab fa-github"></i>
                             <span>GitHub</span>
                         </a>
                     </div>
                 </div>
                 <div class="github-stats">
-                    <img src="https://github-readme-stats.vercel.app/api?username=MieleSantos&show_icons=true&theme=dracula&hide_border=true&bg_color=0D1117&title_color=58A6FF&icon_color=58A6FF" alt="GitHub Stats" />
+                    <img src="https://github-readme-stats.vercel.app/api?username=MieleSantos&show_icons=true&theme=dracula&hide_border=true&bg_color=0D1117&title_color=58A6FF&icon_color=58A6FF" alt="GitHub Stats" loading="lazy" />
                 </div>
             </div>
         </div>

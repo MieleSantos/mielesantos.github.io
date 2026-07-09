@@ -1,40 +1,54 @@
-// Mobile Menu Toggle
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('navMenu');
+const navbar = document.querySelector('.navbar');
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+
+function debounce(fn, delay) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+}
 
 hamburger.addEventListener('click', () => {
+    const isActive = navMenu.classList.toggle('active');
     hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', isActive);
 });
 
-// Close menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(link => {
+navLinks.forEach(link => {
     link.addEventListener('click', () => {
         hamburger.classList.remove('active');
         navMenu.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
     });
 });
 
-// Smooth scroll for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            const offsetTop = target.offsetTop - 80;
             window.scrollTo({
-                top: offsetTop,
+                top: target.offsetTop - 80,
                 behavior: 'smooth'
             });
         }
     });
 });
 
-// Active navigation link on scroll
-const sections = document.querySelectorAll('section[id]');
+function handleScroll() {
+    const scrollY = window.scrollY;
 
-function scrollActive() {
-    const scrollY = window.pageYOffset;
+    if (scrollY > 50) {
+        navbar.style.backgroundColor = 'rgba(13, 17, 23, 0.98)';
+        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
+    } else {
+        navbar.style.backgroundColor = 'rgba(13, 17, 23, 0.95)';
+        navbar.style.boxShadow = 'none';
+    }
 
     sections.forEach(section => {
         const sectionHeight = section.offsetHeight;
@@ -50,18 +64,14 @@ function scrollActive() {
     });
 }
 
-window.addEventListener('scroll', scrollActive);
-
-// Navbar background on scroll
-const navbar = document.querySelector('.navbar');
-
+let ticking = false;
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.style.backgroundColor = 'rgba(13, 17, 23, 0.98)';
-        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
-    } else {
-        navbar.style.backgroundColor = 'rgba(13, 17, 23, 0.95)';
-        navbar.style.boxShadow = 'none';
+    if (!ticking) {
+        requestAnimationFrame(() => {
+            handleScroll();
+            ticking = false;
+        });
+        ticking = true;
     }
 });
 
@@ -87,52 +97,134 @@ function initProjectFilters() {
     });
 }
 
+function getCachedData(key, ttl) {
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+    try {
+        const parsed = JSON.parse(cached);
+        if (Date.now() - parsed.timestamp > ttl) {
+            localStorage.removeItem(key);
+            return null;
+        }
+        return parsed.data;
+    } catch {
+        localStorage.removeItem(key);
+        return null;
+    }
+}
+
+function setCachedData(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
+    } catch {
+    }
+}
+
 async function loadRecentProjects() {
     const recentProjectsList = document.getElementById('recentProjectsList');
     if (!recentProjectsList) return;
 
+    const cacheKey = 'gh_repos';
+    const cached = getCachedData(cacheKey, 3600000);
+
+    if (cached) {
+        renderRecentProjects(cached, recentProjectsList);
+        return;
+    }
+
     try {
         const response = await fetch('https://api.github.com/users/MieleSantos/repos?sort=updated&direction=desc&per_page=100');
-        if (!response.ok) {
-            throw new Error('Erro ao buscar projetos recentes.');
-        }
+        if (!response.ok) throw new Error('Erro ao buscar projetos recentes.');
 
         const repos = await response.json();
-        const recentRepos = repos
-            .filter((repo) => !repo.fork && repo.name.toLowerCase() !== 'mielesantos')
-            .slice(0, 6);
-
-        if (!recentRepos.length) {
-            recentProjectsList.innerHTML = '<li>Nenhum repositório recente encontrado.</li>';
-            return;
-        }
-
-        recentProjectsList.innerHTML = '';
-        recentRepos.forEach((repo) => {
-            const listItem = document.createElement('li');
-
-            const link = document.createElement('a');
-            link.href = repo.html_url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.textContent = repo.name;
-
-            const meta = document.createElement('div');
-            meta.className = 'recent-meta';
-            const language = repo.language || 'Sem linguagem definida';
-            const updatedAt = new Date(repo.updated_at).toLocaleDateString('pt-BR');
-            meta.textContent = `${language} | Atualizado em ${updatedAt}`;
-
-            listItem.appendChild(link);
-            listItem.appendChild(meta);
-            recentProjectsList.appendChild(listItem);
-        });
-    } catch (error) {
+        setCachedData(cacheKey, repos);
+        renderRecentProjects(repos, recentProjectsList);
+    } catch {
         recentProjectsList.innerHTML = '<li>Não foi possível carregar os projetos recentes agora.</li>';
     }
 }
 
-// Animate on scroll
+function renderRecentProjects(repos, container) {
+    const recentRepos = repos
+        .filter((repo) => !repo.fork && repo.name.toLowerCase() !== 'mielesantos')
+        .slice(0, 6);
+
+    if (!recentRepos.length) {
+        container.innerHTML = '<li>Nenhum repositório recente encontrado.</li>';
+        return;
+    }
+
+    container.innerHTML = '';
+    recentRepos.forEach((repo) => {
+        const listItem = document.createElement('li');
+
+        const link = document.createElement('a');
+        link.href = repo.html_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = repo.name;
+
+        const meta = document.createElement('div');
+        meta.className = 'recent-meta';
+        meta.textContent = `${repo.language || 'Sem linguagem definida'} | Atualizado em ${new Date(repo.updated_at).toLocaleDateString('pt-BR')}`;
+
+        listItem.appendChild(link);
+        listItem.appendChild(meta);
+        container.appendChild(listItem);
+    });
+}
+
+async function loadUserStats() {
+    const statNumbers = document.querySelectorAll('.stat-number');
+    if (!statNumbers.length) return;
+
+    const cacheKey = 'gh_user';
+    const cached = getCachedData(cacheKey, 3600000);
+
+    let userData;
+    if (cached) {
+        userData = cached;
+    } else {
+        try {
+            const response = await fetch('https://api.github.com/users/MieleSantos');
+            if (!response.ok) throw new Error('Erro ao buscar dados do usuário.');
+            userData = await response.json();
+            setCachedData(cacheKey, userData);
+        } catch {
+            return;
+        }
+    }
+
+    let repos = getCachedData('gh_repos');
+    if (!repos) {
+        try {
+            const res = await fetch('https://api.github.com/users/MieleSantos/repos?sort=updated&direction=desc&per_page=100');
+            if (res.ok) {
+                repos = await res.json();
+                setCachedData('gh_repos', repos);
+            }
+        } catch {}
+    }
+
+    let totalStars = '...';
+    if (repos) {
+        totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
+    }
+
+    const stats = [
+        userData.public_repos + '+',
+        totalStars,
+        userData.followers ?? '...'
+    ];
+
+    statNumbers.forEach((el, i) => {
+        if (stats[i] !== undefined) el.textContent = String(stats[i]);
+    });
+}
+
+const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const shouldAnimate = !motionQuery.matches;
+
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -143,68 +235,31 @@ const observer = new IntersectionObserver((entries) => {
         if (entry.isIntersecting) {
             entry.target.style.opacity = '1';
             entry.target.style.transform = 'translateY(0)';
+            observer.unobserve(entry.target);
         }
     });
 }, observerOptions);
 
-// Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
-    const animateElements = document.querySelectorAll('.project-card, .skill-category, .stat-card, .info-item');
-    
-    animateElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
+    if (shouldAnimate) {
+        document.querySelectorAll('.project-card, .skill-category, .stat-card, .info-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    }
 
     initProjectFilters();
     loadRecentProjects();
+    loadUserStats();
 });
 
-// Typing effect for hero title (optional enhancement)
-function typeWriter(element, text, speed = 100) {
-    let i = 0;
-    element.textContent = '';
-    
-    function type() {
-        if (i < text.length) {
-            element.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    
-    type();
-}
-
-// Project card hover effects
-document.querySelectorAll('.project-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-10px) scale(1.02)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
-
-// Skill tag animation
-document.querySelectorAll('.skill-tag').forEach(tag => {
-    tag.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-3px) scale(1.05)';
-    });
-    
-    tag.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
-
-// Scroll to top button (optional)
 function createScrollToTop() {
     const scrollBtn = document.createElement('button');
     scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
     scrollBtn.className = 'scroll-to-top';
+    scrollBtn.setAttribute('aria-label', 'Voltar ao topo');
     scrollBtn.style.cssText = `
         position: fixed;
         bottom: 30px;
@@ -221,42 +276,33 @@ function createScrollToTop() {
         justify-content: center;
         font-size: 1.2rem;
         z-index: 999;
-        transition: all 0.3s;
+        transition: transform 0.3s, background-color 0.3s;
         box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
     `;
-    
+
     document.body.appendChild(scrollBtn);
-    
+
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            scrollBtn.style.display = 'flex';
-        } else {
-            scrollBtn.style.display = 'none';
-        }
+        scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
     });
-    
+
     scrollBtn.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    
+
     scrollBtn.addEventListener('mouseenter', () => {
         scrollBtn.style.transform = 'scale(1.1)';
         scrollBtn.style.backgroundColor = 'var(--hover-color)';
     });
-    
+
     scrollBtn.addEventListener('mouseleave', () => {
         scrollBtn.style.transform = 'scale(1)';
         scrollBtn.style.backgroundColor = 'var(--primary-color)';
     });
 }
 
-// Initialize scroll to top button
 createScrollToTop();
 
-// Add active state styling for nav links
 const style = document.createElement('style');
 style.textContent = `
     .nav-link.active {
@@ -275,7 +321,5 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Console message
 console.log('%c👋 Olá! Bem-vindo ao portfólio de Miele Silva', 'color: #58A6FF; font-size: 16px; font-weight: bold;');
 console.log('%cDesenvolvedor Back-end Python especializado em IA', 'color: #8B949E; font-size: 12px;');
-
