@@ -235,7 +235,7 @@ async function loadUserStats() {
 
     if (ghAvatar && userData.avatar_url) ghAvatar.src = userData.avatar_url;
     if (ghName && userData.name) ghName.textContent = userData.name;
-    if (ghBio) ghBio.textContent = userData.bio || 'Desenvolvedor Back-end Python | Apaixonado por IA e automações.';
+    if (ghBio) ghBio.textContent = (userData.bio || 'Backend Engineer | Python • APIs • IA').replace(/\r\n/g, '\n');
     if (ghReposVal) ghReposVal.textContent = String(userData.public_repos ?? 0);
     if (ghStarsVal) ghStarsVal.textContent = String(totalStars);
     if (ghFollowersVal) ghFollowersVal.textContent = String(userData.followers ?? 0);
@@ -341,4 +341,4 @@ style.textContent = `
 document.head.appendChild(style);
 
 console.log('%c👋 Olá! Bem-vindo ao portfólio de Miele Silva', 'color: #58A6FF; font-size: 16px; font-weight: bold;');
-console.log('%cDesenvolvedor Back-end Python especializado em IA', 'color: #8B949E; font-size: 12px;');
+console.log('%cBackend Engineer Python especializado em IA', 'color: #8B949E; font-size: 12px;');
