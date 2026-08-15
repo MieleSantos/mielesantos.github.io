@@ -1,6 +1,6 @@
 # 🦖 Portfólio - Miele Silva
 
-Portfólio pessoal publicado no GitHub Pages, alinhado ao perfil [@MieleSantos](https://github.com/MieleSantos), com foco em Back-end Python, IA aplicada e projetos recentes do GitHub.
+Portfólio pessoal publicado no GitHub Pages, alinhado ao perfil [@MieleSantos](https://github.com/MieleSantos), com foco em Backend Engineer Python, IA aplicada e projetos recentes do GitHub.
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -94,7 +94,7 @@ O portfólio é totalmente responsivo e funciona bem em:
 - **Perfil GitHub**: [MieleSantos](https://github.com/MieleSantos)
 - **GitHub**: [@MieleSantos](https://github.com/MieleSantos)
 - **LinkedIn**: [mielesilva](https://www.linkedin.com/in/mielesilva/)
-- **Portfólio online**: [mielesantos.github.io/myportfolio](https://mielesantos.github.io/myportfolio/)
+- **Portfólio online**: [mielesantos.github.io](https://mielesantos.github.io/)
 
 ## 📄 Licença
 
