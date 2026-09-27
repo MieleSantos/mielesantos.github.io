@@ -14,12 +14,12 @@ Portfólio pessoal publicado no GitHub Pages, alinhado ao perfil [@MieleSantos](
 
 - ✅ Design moderno e responsivo
 - ✅ Navegação suave entre seções
-- ✅ Menu mobile hambúrguer
+- ✅ Menu mobile hambúrguer acessível por teclado (Esc fecha)
 - ✅ Animações ao scroll
-- ✅ Cards de projetos interativos com filtro por categoria (`IA`, `API`, `Dados`)
+- ✅ Cards de projetos interativos com filtro por categoria (`IA`, `API`, `Dados`, `Nuvem`, `Estudos`)
 - ✅ Card de **Projetos Recentes** carregado automaticamente da GitHub API
 - ✅ Seção de artigos/tutoriais baseada no repositório `pattern_chain`
-- ✅ Estatísticas do GitHub integradas (com fallback recomendado)
+- ✅ Card de perfil e estatísticas do GitHub carregados da API (com cache de 1h no `localStorage`)
 - ✅ Botão scroll to top
 - ✅ Tema dark moderno
 
@@ -30,7 +30,7 @@ Portfólio pessoal publicado no GitHub Pages, alinhado ao perfil [@MieleSantos](
 3. **Tecnologias** - Stack tecnológico organizado por categoria
 4. **Projetos** - Projetos em destaque + filtros + card dinâmico de projetos recentes
 5. **Artigos** - Conteúdo prático sobre Prompt Template e Sequential Chain
-6. **Contato** - Links para LinkedIn e GitHub
+6. **Contato** - LinkedIn, e-mail, WhatsApp e card de perfil do GitHub
 
 ## 📦 Como Usar
 
@@ -38,10 +38,9 @@ Portfólio pessoal publicado no GitHub Pages, alinhado ao perfil [@MieleSantos](
 
 1. Faça o push deste repositório para o GitHub
 2. Vá em Settings > Pages
-3. Selecione a branch `main` (ou `master`)
-4. Selecione a pasta `/root`
-5. Salve e aguarde alguns minutos
-6. Seu portfólio estará disponível em: `https://seu-usuario.github.io/nome-do-repo/`
+3. Em *Source*, selecione *Deploy from a branch*, a branch `main` e a pasta `/ (root)`
+4. Salve e aguarde alguns minutos
+5. O portfólio fica disponível em: `https://mielesantos.github.io/`
 
 ### Para desenvolvimento local:
 
@@ -58,7 +57,6 @@ Portfólio pessoal publicado no GitHub Pages, alinhado ao perfil [@MieleSantos](
 
 ## 🎯 Personalização
 
-### Cores
 ### Cores
 Edite as variáveis CSS em `css/styles.css`:
 ```css
@@ -78,8 +76,9 @@ Edite as variáveis CSS em `css/styles.css`:
 ### Dados do GitHub
 - Os **Projetos Recentes** são carregados via endpoint público:
   - `https://api.github.com/users/MieleSantos/repos?sort=updated&direction=desc&per_page=100`
-- O bloco de **GitHub Stats** é um card de perfil nativo e dinâmico que puxa os dados em tempo real.
-  - Se o serviço estiver indisponível, mantenha o card de projetos recentes como fonte principal dos dados dinâmicos.
+- O **card de perfil** e os contadores da seção *Sobre* usam `https://api.github.com/users/MieleSantos`.
+- As respostas ficam em cache por 1h no `localStorage` para respeitar o limite de 60 requisições/hora da API sem autenticação. Se a API falhar, os valores estáticos do HTML são mantidos.
+- Ao alterar `css/styles.css` ou `js/script.js`, incremente o parâmetro `?v=` em `index.html` para invalidar o cache do navegador.
 
 ## 📱 Responsividade
 

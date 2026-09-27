@@ -8,19 +8,20 @@
     <meta property="og:description" content="Portfólio de Miele Silva - Backend Engineer Python com foco em IA, APIs, chatbots e MBA em Engenharia de Software com IA.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mielesantos.github.io">
-    <meta property="og:image" content="https://github-readme-stats.vercel.app/api?username=MieleSantos&amp;show_icons=true&amp;theme=dracula&amp;hide_border=true">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://github.com/MieleSantos.png">
+    <meta property="og:image:alt" content="Foto de perfil de Miele Silva">
+    <meta name="twitter:card" content="summary">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦖</text></svg>">
     <title>Miele Silva - Backend Engineer Python</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="stylesheet" href="css/styles.css?v=1.0.2">
+    <link rel="stylesheet" href="css/styles.css?v=1.1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <a href="#home" class="skip-link">Pular para o conteúdo</a>
+    <a href="#main" class="skip-link">Pular para o conteúdo</a>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -36,14 +37,15 @@
                 <li><a href="#articles" class="nav-link">Artigos</a></li>
                 <li><a href="#contact" class="nav-link">Contato</a></li>
             </ul>
-            <div class="hamburger" id="hamburger" role="button" aria-label="Abrir menu" aria-expanded="false" tabindex="0">
+            <button class="hamburger" id="hamburger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </div>
     </nav>
 
+    <main id="main" tabindex="-1">
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="container">
@@ -79,18 +81,19 @@
                             <div class="ide-title">agent.py</div>
                         </div>
                         <div class="ide-body">
-                            <pre><code><span class="keyword">from</span> <span class="module">langchain</span> <span class="keyword">import</span> OpenAI
-<span class="keyword">from</span> <span class="module">langgraph.graph</span> <span class="keyword">import</span> StateGraph
+                            <pre><code><span class="keyword">from</span> <span class="module">langchain_openai</span> <span class="keyword">import</span> ChatOpenAI
+<span class="keyword">from</span> <span class="module">langgraph.graph</span> <span class="keyword">import</span> StateGraph, MessagesState, START
+
+llm = ChatOpenAI(model=<span class="string">"gpt-4o"</span>)
 
 <span class="comment"># Agente de IA com LangGraph</span>
-<span class="keyword">def</span> <span class="function">assistant</span>(state):
-    llm = OpenAI(model=<span class="string">"gpt-4o"</span>)
-    response = llm.invoke(state.message)
-    <span class="keyword">return</span> {<span class="string">"reply"</span>: response}
+<span class="keyword">def</span> <span class="function">assistant</span>(state: MessagesState):
+    response = llm.invoke(state[<span class="string">"messages"</span>])
+    <span class="keyword">return</span> {<span class="string">"messages"</span>: [response]}
 
-workflow = StateGraph()
+workflow = StateGraph(MessagesState)
 workflow.add_node(<span class="string">"agent"</span>, assistant)
-workflow.set_entry_point(<span class="string">"agent"</span>)
+workflow.add_edge(START, <span class="string">"agent"</span>)
 agent = workflow.compile()</code></pre>
                         </div>
                     </div>
@@ -138,7 +141,7 @@ agent = workflow.compile()</code></pre>
                 </div>
                 <div class="about-stats">
                     <div class="stat-card">
-                        <div class="stat-number">99+</div>
+                        <div class="stat-number">99</div>
                         <div class="stat-label">Repositórios</div>
                     </div>
                     <div class="stat-card">
@@ -243,16 +246,16 @@ agent = workflow.compile()</code></pre>
                     <h3>Chatbots & IA</h3>
                     <p>Projetos de chatbots inteligentes e agentes com IA</p>
                     <ul class="project-list">
-                        <li><a href="https://github.com/MieleSantos/KnowledgeHub" target="_blank">KnowledgeHub - Busca semântica e chatbot de biblioteca</a></li>
-                        <li><a href="https://github.com/MieleSantos/semantic_search" target="_blank">Semantic Search - Busca semântica com IA Generativa</a></li>
-                        <li><a href="https://github.com/MieleSantos/pybot" target="_blank">Pybot - Chatbot de dúvidas sobre Python</a></li>
-                        <li><a href="https://github.com/MieleSantos/localfinderia" target="_blank">Localfinderia - Localização de estabelecimentos com IA</a></li>
-                        <li><a href="https://github.com/MieleSantos/zapbot" target="_blank">Zapbot - Bot com IA para WhatsApp</a></li>
-                        <li><a href="https://github.com/MieleSantos/chatbot-langgraph" target="_blank">Chatbot LangGraph - Fluxos conversacionais com LangGraph</a></li>
-                        <li><a href="https://github.com/MieleSantos/rag_chatbot" target="_blank">RAG Chatbot - Chatbot com abordagem Retrieval-Augmented Generation</a></li>
-                        <li><a href="https://github.com/MieleSantos/agente_estoque" target="_blank">Agente Estoque - Assistente de estoque com IA</a></li>
-                        <li><a href="https://github.com/MieleSantos/agente_financeiro" target="_blank">Agente Financeiro - Automação de tarefas financeiras</a></li>
-                        <li><a href="https://github.com/MieleSantos/assistente_financeiro_django" target="_blank">Assistente Financeiro Django - Versão web com Django</a></li>
+                        <li><a href="https://github.com/MieleSantos/KnowledgeHub" target="_blank" rel="noopener noreferrer">KnowledgeHub - Busca semântica e chatbot de biblioteca</a></li>
+                        <li><a href="https://github.com/MieleSantos/semantic_search" target="_blank" rel="noopener noreferrer">Semantic Search - Busca semântica com IA Generativa</a></li>
+                        <li><a href="https://github.com/MieleSantos/pybot" target="_blank" rel="noopener noreferrer">Pybot - Chatbot de dúvidas sobre Python</a></li>
+                        <li><a href="https://github.com/MieleSantos/localfinderia" target="_blank" rel="noopener noreferrer">Localfinderia - Localização de estabelecimentos com IA</a></li>
+                        <li><a href="https://github.com/MieleSantos/zapbot" target="_blank" rel="noopener noreferrer">Zapbot - Bot com IA para WhatsApp</a></li>
+                        <li><a href="https://github.com/MieleSantos/chatbot-langgraph" target="_blank" rel="noopener noreferrer">Chatbot LangGraph - Fluxos conversacionais com LangGraph</a></li>
+                        <li><a href="https://github.com/MieleSantos/rag_chatbot" target="_blank" rel="noopener noreferrer">RAG Chatbot - Chatbot com abordagem Retrieval-Augmented Generation</a></li>
+                        <li><a href="https://github.com/MieleSantos/agente_estoque" target="_blank" rel="noopener noreferrer">Agente Estoque - Assistente de estoque com IA</a></li>
+                        <li><a href="https://github.com/MieleSantos/agente_financeiro" target="_blank" rel="noopener noreferrer">Agente Financeiro - Automação de tarefas financeiras</a></li>
+                        <li><a href="https://github.com/MieleSantos/assistente_financeiro_django" target="_blank" rel="noopener noreferrer">Assistente Financeiro Django - Versão web com Django</a></li>
                     </ul>
                 </div>
 
@@ -262,12 +265,12 @@ agent = workflow.compile()</code></pre>
                     <h3>APIs & Backend</h3>
                     <p>APIs REST robustas e sistemas backend</p>
                     <ul class="project-list">
-                        <li><a href="https://github.com/MieleSantos/api_with_openspec" target="_blank">API with OpenSpec - API com Redis e especificação OpenSpec</a></li>
-                        <li><a href="https://github.com/MieleSantos/book_catalog_api" target="_blank">Book Catalog API - Criação e consulta de livros</a></li>
-                        <li><a href="https://github.com/MieleSantos/api_email" target="_blank">API Email - API de estudos com Celery</a></li>
-                        <li><a href="https://github.com/MieleSantos/read_api_network" target="_blank">Read API Network - Desafio de processo seletivo</a></li>
-                        <li><a href="https://github.com/MieleSantos/quickstart_api_openai" target="_blank">Quickstart API OpenAI - Integração com API da OpenAI</a></li>
-                        <li><a href="https://github.com/MieleSantos/agent_sql" target="_blank">Agent SQL - Agente para consultas SQL com LangChain</a></li>
+                        <li><a href="https://github.com/MieleSantos/api_with_openspec" target="_blank" rel="noopener noreferrer">API with OpenSpec - API com Redis e especificação OpenSpec</a></li>
+                        <li><a href="https://github.com/MieleSantos/book_catalog_api" target="_blank" rel="noopener noreferrer">Book Catalog API - Criação e consulta de livros</a></li>
+                        <li><a href="https://github.com/MieleSantos/api_email" target="_blank" rel="noopener noreferrer">API Email - API de estudos com Celery</a></li>
+                        <li><a href="https://github.com/MieleSantos/read_api_network" target="_blank" rel="noopener noreferrer">Read API Network - Desafio de processo seletivo</a></li>
+                        <li><a href="https://github.com/MieleSantos/quickstart_api_openai" target="_blank" rel="noopener noreferrer">Quickstart API OpenAI - Integração com API da OpenAI</a></li>
+                        <li><a href="https://github.com/MieleSantos/agent_sql" target="_blank" rel="noopener noreferrer">Agent SQL - Agente para consultas SQL com LangChain</a></li>
                     </ul>
                 </div>
 
@@ -277,11 +280,11 @@ agent = workflow.compile()</code></pre>
                     <h3>Data Science & Processamento</h3>
                     <p>Análise de dados e processamento de informações</p>
                     <ul class="project-list">
-                        <li><a href="https://github.com/MieleSantos/classificador_texto_Twitter" target="_blank">Classificador de Texto no Twitter - NLP para classificação</a></li>
-                        <li><a href="https://github.com/MieleSantos/classificador_noticias" target="_blank">Classificador de Notícias - Categorização de conteúdo</a></li>
-                        <li><a href="https://github.com/MieleSantos/Reconhecimento_entidade_nomeada" target="_blank">Reconhecimento de Entidades Nomeadas - Projeto NER</a></li>
-                        <li><a href="https://github.com/MieleSantos/transcricao_video_ia" target="_blank">Transcrição de Vídeo com IA - Compreensão de conteúdo multimídia</a></li>
-                        <li><a href="https://github.com/MieleSantos/graficos_interativos_python" target="_blank">Gráficos Interativos Python - Visualização de dados</a></li>
+                        <li><a href="https://github.com/MieleSantos/classificador_texto_Twitter" target="_blank" rel="noopener noreferrer">Classificador de Texto no Twitter - NLP para classificação</a></li>
+                        <li><a href="https://github.com/MieleSantos/classificador_noticias" target="_blank" rel="noopener noreferrer">Classificador de Notícias - Categorização de conteúdo</a></li>
+                        <li><a href="https://github.com/MieleSantos/Reconhecimento_entidade_nomeada" target="_blank" rel="noopener noreferrer">Reconhecimento de Entidades Nomeadas - Projeto NER</a></li>
+                        <li><a href="https://github.com/MieleSantos/transcricao_video_ia" target="_blank" rel="noopener noreferrer">Transcrição de Vídeo com IA - Compreensão de conteúdo multimídia</a></li>
+                        <li><a href="https://github.com/MieleSantos/graficos_interativos_python" target="_blank" rel="noopener noreferrer">Gráficos Interativos Python - Visualização de dados</a></li>
                     </ul>
                 </div>
 
@@ -291,11 +294,11 @@ agent = workflow.compile()</code></pre>
                     <h3>Cloud & Big Data</h3>
                     <p>Projetos em nuvem e big data</p>
                     <ul class="project-list">
-                        <li><a href="https://github.com/MieleSantos/energy_solar" target="_blank">Energy Solar - Estudos com Flask, K8s e GitHub Actions</a></li>
-                        <li><a href="https://github.com/MieleSantos/website_static_aws_s3" target="_blank">Website Static AWS S3 - Deploy estático na AWS</a></li>
-                        <li><a href="https://github.com/MieleSantos/fundamentos_etl_python" target="_blank">Fundamentos ETL Python - Pipeline de dados com Python</a></li>
-                        <li><a href="https://github.com/MieleSantos/pipeline_process_processo" target="_blank">Pipeline Process Processo - Automação de processamento</a></li>
-                        <li><a href="https://github.com/MieleSantos/mba-ia-desafio-ingestao-busca" target="_blank">Desafio de Ingestão e Busca - MBA Engenharia de Software com IA</a></li>
+                        <li><a href="https://github.com/MieleSantos/energy_solar" target="_blank" rel="noopener noreferrer">Energy Solar - Estudos com Flask, K8s e GitHub Actions</a></li>
+                        <li><a href="https://github.com/MieleSantos/website_static_aws_s3" target="_blank" rel="noopener noreferrer">Website Static AWS S3 - Deploy estático na AWS</a></li>
+                        <li><a href="https://github.com/MieleSantos/fundamentos_etl_python" target="_blank" rel="noopener noreferrer">Fundamentos ETL Python - Pipeline de dados com Python</a></li>
+                        <li><a href="https://github.com/MieleSantos/pipeline_process_processo" target="_blank" rel="noopener noreferrer">Pipeline Process Processo - Automação de processamento</a></li>
+                        <li><a href="https://github.com/MieleSantos/mba-ia-desafio-ingestao-busca" target="_blank" rel="noopener noreferrer">Desafio de Ingestão e Busca - MBA Engenharia de Software com IA</a></li>
                     </ul>
                 </div>
 
@@ -305,10 +308,10 @@ agent = workflow.compile()</code></pre>
                     <h3>Estudos & Tutoriais</h3>
                     <p>Projetos de aprendizado e tutoriais</p>
                     <ul class="project-list">
-                        <li><a href="https://github.com/MieleSantos/principios-solid" target="_blank">Princípios SOLID - Boas práticas de arquitetura</a></li>
-                        <li><a href="https://github.com/MieleSantos/pattern_chain" target="_blank">Pattern Chain - Estudo de Chain of Responsibility</a></li>
-                        <li><a href="https://github.com/MieleSantos/udemy_ia" target="_blank">Udemy IA - Projetos e exercícios de IA</a></li>
-                        <li><a href="https://github.com/MieleSantos/tradutor" target="_blank">Tradutor - Projeto de IA Generativa</a></li>
+                        <li><a href="https://github.com/MieleSantos/principios-solid" target="_blank" rel="noopener noreferrer">Princípios SOLID - Boas práticas de arquitetura</a></li>
+                        <li><a href="https://github.com/MieleSantos/pattern_chain" target="_blank" rel="noopener noreferrer">Pattern Chain - Estudo de Chain of Responsibility</a></li>
+                        <li><a href="https://github.com/MieleSantos/udemy_ia" target="_blank" rel="noopener noreferrer">Udemy IA - Projetos e exercícios de IA</a></li>
+                        <li><a href="https://github.com/MieleSantos/tradutor" target="_blank" rel="noopener noreferrer">Tradutor - Projeto de IA Generativa</a></li>
                     </ul>
                 </div>
             </div>
@@ -433,6 +436,8 @@ agent = workflow.compile()</code></pre>
         </div>
     </section>
 
+    </main>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -441,7 +446,7 @@ agent = workflow.compile()</code></pre>
         </div>
     </footer>
 
-    <script src="js/script.js?v=1.0.2"></script>
+    <script src="js/script.js?v=1.1.0"></script>
 </body>
 </html>
 

@@ -48,13 +48,19 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: rgba(6, 8, 20, 0.85);
+    background-color: rgba(6, 8, 20, 0.92);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-color);
     z-index: 1000;
     padding: 0.9rem 0;
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.navbar.scrolled {
+    background-color: rgba(6, 8, 20, 0.98);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(99, 102, 241, 0.2);
 }
 
 .navbar .container {
@@ -98,11 +104,29 @@ body {
     color: var(--accent-color);
 }
 
+.nav-link.active {
+    color: var(--primary-color);
+    position: relative;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
+    background: none;
+    border: none;
+    padding: 4px;
 }
 
 .hamburger span {
@@ -311,6 +335,7 @@ body {
 /* Section Styles */
 section {
     padding: 100px 0;
+    scroll-margin-top: 80px;
 }
 
 .section-title {
@@ -962,6 +987,36 @@ section {
     color: #ff6b6b;
 }
 
+/* Scroll to top */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    z-index: 999;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.scroll-to-top.visible {
+    display: flex;
+}
+
+.scroll-to-top:hover {
+    transform: scale(1.1);
+    background-color: var(--hover-color);
+}
+
 /* Skip to content link */
 .skip-link {
     position: absolute;
@@ -980,6 +1035,10 @@ section {
 
 .skip-link:focus {
     top: 0;
+}
+
+main:focus {
+    outline: none;
 }
 
 /* Reduced motion */
