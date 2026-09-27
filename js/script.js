@@ -1,68 +1,61 @@
+const GITHUB_USER = 'MieleSantos';
+const CACHE_TTL = 3600000;
+
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('navMenu');
 const navbar = document.querySelector('.navbar');
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-link');
 
-function debounce(fn, delay) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => fn(...args), delay);
-    };
+function closeMenu() {
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Abrir menu');
 }
 
 hamburger.addEventListener('click', () => {
     const isActive = navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
-    hamburger.setAttribute('aria-expanded', isActive);
+    hamburger.classList.toggle('active', isActive);
+    hamburger.setAttribute('aria-expanded', String(isActive));
+    hamburger.setAttribute('aria-label', isActive ? 'Fechar menu' : 'Abrir menu');
 });
 
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-        hamburger.setAttribute('aria-expanded', 'false');
-    });
+navLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+        closeMenu();
+        hamburger.focus();
+    }
 });
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            window.scrollTo({
-                top: target.offsetTop - 80,
-                behavior: 'smooth'
-            });
-        }
+function createScrollToTop() {
+    const scrollBtn = document.createElement('button');
+    scrollBtn.innerHTML = '<i class="fas fa-arrow-up" aria-hidden="true"></i>';
+    scrollBtn.className = 'scroll-to-top';
+    scrollBtn.type = 'button';
+    scrollBtn.setAttribute('aria-label', 'Voltar ao topo');
+    scrollBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0 });
     });
-});
+    document.body.appendChild(scrollBtn);
+    return scrollBtn;
+}
+
+const scrollBtn = createScrollToTop();
 
 function handleScroll() {
     const scrollY = window.scrollY;
 
-    if (scrollY > 50) {
-        navbar.style.backgroundColor = 'rgba(6, 8, 20, 0.98)';
-        navbar.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-        navbar.style.borderBottomColor = 'rgba(99, 102, 241, 0.2)';
-    } else {
-        navbar.style.backgroundColor = 'rgba(6, 8, 20, 0.92)';
-        navbar.style.boxShadow = 'none';
-        navbar.style.borderBottomColor = 'var(--border-color)';
-    }
+    navbar.classList.toggle('scrolled', scrollY > 50);
+    scrollBtn.classList.toggle('visible', scrollY > 300);
 
     sections.forEach(section => {
-        const sectionHeight = section.offsetHeight;
         const sectionTop = section.offsetTop - 100;
-        const sectionId = section.getAttribute('id');
-        const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
-
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            navLink?.classList.add('active');
-        } else {
-            navLink?.classList.remove('active');
-        }
+        const navLink = document.querySelector(`.nav-link[href="#${section.id}"]`);
+        const isCurrent = scrollY > sectionTop && scrollY <= sectionTop + section.offsetHeight;
+        navLink?.classList.toggle('active', isCurrent);
     });
 }
 
@@ -75,7 +68,7 @@ window.addEventListener('scroll', () => {
         });
         ticking = true;
     }
-});
+}, { passive: true });
 
 function initProjectFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -84,25 +77,28 @@ function initProjectFilters() {
     if (!filterButtons.length || !projectCards.length) return;
 
     filterButtons.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.classList.contains('active')));
+
         button.addEventListener('click', () => {
             const selectedFilter = button.dataset.filter;
 
-            filterButtons.forEach((btn) => btn.classList.remove('active'));
-            button.classList.add('active');
+            filterButtons.forEach((btn) => {
+                btn.classList.toggle('active', btn === button);
+                btn.setAttribute('aria-pressed', String(btn === button));
+            });
 
             projectCards.forEach((card) => {
-                const cardCategory = card.dataset.category;
-                const shouldShow = selectedFilter === 'all' || selectedFilter === cardCategory;
+                const shouldShow = selectedFilter === 'all' || selectedFilter === card.dataset.category;
                 card.classList.toggle('hidden', !shouldShow);
             });
         });
     });
 }
 
-function getCachedData(key, ttl) {
-    const cached = localStorage.getItem(key);
-    if (!cached) return null;
+function getCachedData(key, ttl = CACHE_TTL) {
     try {
+        const cached = localStorage.getItem(key);
+        if (!cached) return null;
         const parsed = JSON.parse(cached);
         if (Date.now() - parsed.timestamp > ttl) {
             localStorage.removeItem(key);
@@ -110,7 +106,6 @@ function getCachedData(key, ttl) {
         }
         return parsed.data;
     } catch {
-        localStorage.removeItem(key);
         return null;
     }
 }
@@ -119,36 +114,77 @@ function setCachedData(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
     } catch {
+        // localStorage indisponível ou cheio: segue sem cache
     }
 }
 
+async function fetchJson(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`GitHub API respondeu ${response.status}`);
+    return response.json();
+}
+
+// Mantém só os campos usados para não estourar o localStorage
+function slimRepo(repo) {
+    return {
+        name: repo.name,
+        html_url: repo.html_url,
+        language: repo.language,
+        updated_at: repo.updated_at,
+        fork: repo.fork,
+        stargazers_count: repo.stargazers_count
+    };
+}
+
+let reposPromise = null;
+
+// Busca todos os repositórios (paginando) uma única vez por carregamento
+function getRepos() {
+    if (reposPromise) return reposPromise;
+
+    reposPromise = (async () => {
+        const cached = getCachedData('gh_repos');
+        if (cached) return cached;
+
+        const repos = [];
+        for (let page = 1; page <= 10; page++) {
+            const batch = await fetchJson(
+                `https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&direction=desc&per_page=100&page=${page}`
+            );
+            repos.push(...batch.map(slimRepo));
+            if (batch.length < 100) break;
+        }
+        setCachedData('gh_repos', repos);
+        return repos;
+    })();
+
+    reposPromise.catch(() => { reposPromise = null; });
+    return reposPromise;
+}
+
+async function getUser() {
+    const cached = getCachedData('gh_user');
+    if (cached) return cached;
+
+    const user = await fetchJson(`https://api.github.com/users/${GITHUB_USER}`);
+    setCachedData('gh_user', user);
+    return user;
+}
+
 async function loadRecentProjects() {
-    const recentProjectsList = document.getElementById('recentProjectsList');
-    if (!recentProjectsList) return;
-
-    const cacheKey = 'gh_repos';
-    const cached = getCachedData(cacheKey, 3600000);
-
-    if (cached) {
-        renderRecentProjects(cached, recentProjectsList);
-        return;
-    }
+    const container = document.getElementById('recentProjectsList');
+    if (!container) return;
 
     try {
-        const response = await fetch('https://api.github.com/users/MieleSantos/repos?sort=updated&direction=desc&per_page=100');
-        if (!response.ok) throw new Error('Erro ao buscar projetos recentes.');
-
-        const repos = await response.json();
-        setCachedData(cacheKey, repos);
-        renderRecentProjects(repos, recentProjectsList);
+        renderRecentProjects(await getRepos(), container);
     } catch {
-        recentProjectsList.innerHTML = '<li>Não foi possível carregar os projetos recentes agora.</li>';
+        container.innerHTML = '<li>Não foi possível carregar os projetos recentes agora.</li>';
     }
 }
 
 function renderRecentProjects(repos, container) {
     const recentRepos = repos
-        .filter((repo) => !repo.fork && repo.name.toLowerCase() !== 'mielesantos')
+        .filter((repo) => !repo.fork && repo.name.toLowerCase() !== GITHUB_USER.toLowerCase())
         .slice(0, 6);
 
     if (!recentRepos.length) {
@@ -177,55 +213,28 @@ function renderRecentProjects(repos, container) {
 }
 
 async function loadUserStats() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    const hasStats = statNumbers.length > 0;
-
-    const cacheKey = 'gh_user';
-    const cached = getCachedData(cacheKey, 3600000);
-
     let userData;
-    if (cached) {
-        userData = cached;
-    } else {
-        try {
-            const response = await fetch('https://api.github.com/users/MieleSantos');
-            if (!response.ok) throw new Error('Erro ao buscar dados do usuário.');
-            userData = await response.json();
-            setCachedData(cacheKey, userData);
-        } catch {
-            return;
-        }
+    try {
+        userData = await getUser();
+    } catch {
+        return;
     }
 
-    let repos = getCachedData('gh_repos');
-    if (!repos) {
-        try {
-            const res = await fetch('https://api.github.com/users/MieleSantos/repos?sort=updated&direction=desc&per_page=100');
-            if (res.ok) {
-                repos = await res.json();
-                setCachedData('gh_repos', repos);
-            }
-        } catch {}
-    }
-
-    let totalStars = 0;
-    if (repos) {
+    let totalStars = null;
+    try {
+        const repos = await getRepos();
         totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
+    } catch {
+        // mantém os valores estáticos de stars
     }
 
-    // Atualiza contadores da seção Sobre Mim se existirem
-    if (hasStats) {
-        const stats = [
-            (userData.public_repos ?? 0) + '+',
-            totalStars,
-            userData.followers ?? '...'
-        ];
-        statNumbers.forEach((el, i) => {
-            if (stats[i] !== undefined) el.textContent = String(stats[i]);
-        });
-    }
+    // Contadores da seção Sobre Mim
+    const [reposEl, starsEl, followersEl] = document.querySelectorAll('.stat-number');
+    if (reposEl) reposEl.textContent = String(userData.public_repos ?? 0);
+    if (starsEl && totalStars !== null) starsEl.textContent = String(totalStars);
+    if (followersEl) followersEl.textContent = String(userData.followers ?? 0);
 
-    // Atualiza o novo Card de Perfil do GitHub dinamicamente
+    // Card de perfil do GitHub
     const ghAvatar = document.getElementById('ghAvatar');
     const ghName = document.getElementById('ghName');
     const ghBio = document.getElementById('ghBio');
@@ -237,17 +246,11 @@ async function loadUserStats() {
     if (ghName && userData.name) ghName.textContent = userData.name;
     if (ghBio) ghBio.textContent = (userData.bio || 'Backend Engineer | Python • APIs • IA').replace(/\r\n/g, '\n');
     if (ghReposVal) ghReposVal.textContent = String(userData.public_repos ?? 0);
-    if (ghStarsVal) ghStarsVal.textContent = String(totalStars);
+    if (ghStarsVal) ghStarsVal.textContent = totalStars !== null ? String(totalStars) : '—';
     if (ghFollowersVal) ghFollowersVal.textContent = String(userData.followers ?? 0);
 }
 
-const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-const shouldAnimate = !motionQuery.matches;
-
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+const shouldAnimate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -257,7 +260,10 @@ const observer = new IntersectionObserver((entries) => {
             observer.unobserve(entry.target);
         }
     });
-}, observerOptions);
+}, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     if (shouldAnimate) {
@@ -269,76 +275,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    handleScroll();
     initProjectFilters();
     loadRecentProjects();
     loadUserStats();
 });
 
-function createScrollToTop() {
-    const scrollBtn = document.createElement('button');
-    scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    scrollBtn.className = 'scroll-to-top';
-    scrollBtn.setAttribute('aria-label', 'Voltar ao topo');
-    scrollBtn.style.cssText = `
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 50px;
-        height: 50px;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        z-index: 999;
-        transition: transform 0.3s, background-color 0.3s;
-        box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
-    `;
-
-    document.body.appendChild(scrollBtn);
-
-    window.addEventListener('scroll', () => {
-        scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-    });
-
-    scrollBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    scrollBtn.addEventListener('mouseenter', () => {
-        scrollBtn.style.transform = 'scale(1.1)';
-        scrollBtn.style.backgroundColor = 'var(--hover-color)';
-    });
-
-    scrollBtn.addEventListener('mouseleave', () => {
-        scrollBtn.style.transform = 'scale(1)';
-        scrollBtn.style.backgroundColor = 'var(--primary-color)';
-    });
-}
-
-createScrollToTop();
-
-const style = document.createElement('style');
-style.textContent = `
-    .nav-link.active {
-        color: var(--primary-color);
-        position: relative;
-    }
-    .nav-link.active::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: var(--primary-color);
-    }
-`;
-document.head.appendChild(style);
-
-console.log('%c👋 Olá! Bem-vindo ao portfólio de Miele Silva', 'color: #58A6FF; font-size: 16px; font-weight: bold;');
-console.log('%cBackend Engineer Python especializado em IA', 'color: #8B949E; font-size: 12px;');
+console.log('%c👋 Olá! Bem-vindo ao portfólio de Miele Silva', 'color: #6366F1; font-size: 16px; font-weight: bold;');
+console.log('%cBackend Engineer Python especializado em IA', 'color: #9CA3AF; font-size: 12px;');
